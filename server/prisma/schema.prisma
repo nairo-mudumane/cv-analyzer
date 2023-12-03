@@ -7,10 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Document {
+model Resume {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  url String @unique
+  url    String   @unique
+  skills String[]
+  // profile String?
+  // education String?
+  // experience String?
+
+  @@map("resumes")
 }

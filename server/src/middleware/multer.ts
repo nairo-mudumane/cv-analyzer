@@ -2,6 +2,7 @@ import path from "path";
 import multer from "multer";
 import type { Request } from "express";
 import type { FileFilterCallback } from "multer";
+import fs from "fs";
 
 const limits = {
   fileSize: 1024 * 1024 * 10, // 10MB
@@ -32,12 +33,17 @@ function filename(
   const now = new Date().toISOString().toLowerCase();
   const name = encodeURIComponent(file.originalname);
 
-  callback(null, `${now}_${name}`);
+  callback(null, `${name}_-_${now}`);
 }
 
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
-    callback(null, path.resolve(".tmp"));
+    const destinationPath = path.resolve(".tmp");
+
+    fs.mkdir(destinationPath, { recursive: true }, (error) => {
+      if (error) callback(error, "");
+      else callback(null, destinationPath);
+    });
   },
   filename,
 });
