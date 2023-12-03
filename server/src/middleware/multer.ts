@@ -37,7 +37,7 @@ function filename(
 
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
-    callback(null, path.resolve("uploads"));
+    callback(null, path.resolve(".tmp"));
   },
   filename,
 });
