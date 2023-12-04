@@ -3,11 +3,13 @@ import PDFParser from "pdf-parse";
 import database from "../../services/database";
 import { IResume } from "../../@types";
 import { downloadBuffer } from "../../services/download-buffer";
+import Gpt from "../../services/gpt";
 
 export async function extract(request: Request, response: Response) {
+  const gpt = new Gpt();
+  let resume: IResume | null = null;
   const { id } = request.params as { id: string };
   const { token } = request.query as { token?: string };
-  let resume: IResume | null = null;
 
   try {
     if (!token) throw new Error("access denied: no token provided");
@@ -26,7 +28,12 @@ export async function extract(request: Request, response: Response) {
 
     const pdfData = await PDFParser(PDFBuffer);
 
-    return response.json({ id, token, resume, pdfData });
+    const translated = await gpt.translate({
+      source: pdfData.text,
+      targetLang: "EN",
+    });
+
+    return response.json({ "pdfData.text": pdfData.text, translated });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }
