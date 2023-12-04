@@ -12,11 +12,8 @@ model Resume {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  url    String   @unique
-  skills String[]
-  // profile String?
-  // education String?
-  // experience String?
+  url   String @unique
+  token String
 
   @@map("resumes")
 }

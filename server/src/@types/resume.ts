@@ -2,7 +2,7 @@ import { DbData, DbKeys } from "./global";
 
 export interface IResume extends DbData {
   url: string;
-  skills: Array<string>;
+  token: string;
 }
 
-export type INewResume = Partial<Omit<IResume, DbKeys>>;
+export type INewResume = Partial<Pick<IResume, DbKeys>>;
