@@ -1,3 +1,4 @@
+import { INewResumeMetadata } from "../../@types";
 import prompts from "../../prompts";
 import { ITranslateOptions } from "./@types";
 import { config } from "./config";
@@ -18,5 +19,16 @@ export default class Gpt {
     const result = await this.openAiLlm.predict(prompt);
 
     return result;
+  }
+
+  public async precessMetadata(source: string): Promise<INewResumeMetadata> {
+    try {
+      const prompt = prompts.extract.metadata.replace("{{source}}", source);
+      const result = await this.openAiLlm.predict(prompt);
+      const parsed = JSON.parse(result) as INewResumeMetadata;
+      return parsed;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 }

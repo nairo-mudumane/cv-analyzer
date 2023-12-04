@@ -17,4 +17,8 @@ const $connect = async (callback?: OnConnectCallback) => {
   }
 };
 
-export default { $connect, resume: prisma.resume };
+export default {
+  $connect,
+  resume: prisma.resume,
+  resumeMetadata: prisma.resumeMetadata,
+};

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import PDFParser from "pdf-parse";
 import database from "../../services/database";
-import { IResume } from "../../@types";
+import { INewResumeMetadata, IResume, UndoPartial } from "../../@types";
 import { downloadBuffer } from "../../services/download-buffer";
 import Gpt from "../../services/gpt";
 
@@ -33,7 +33,18 @@ export async function extract(request: Request, response: Response) {
       targetLang: "EN",
     });
 
-    return response.json({ "pdfData.text": pdfData.text, translated });
+    const metadata = await gpt.precessMetadata(translated);
+
+    const createdMetadata = await database.resumeMetadata.create({
+      data: {
+        ...(metadata as UndoPartial<INewResumeMetadata>),
+        resumeId: resume.id as string,
+      },
+    });
+
+    return response
+      .status(200)
+      .json({ message: "ok", data: { ...resume, metadata: createdMetadata } });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }

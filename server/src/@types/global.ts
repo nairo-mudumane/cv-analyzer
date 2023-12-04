@@ -5,3 +5,5 @@ export interface DbData<ID = number | string> {
 }
 
 export type DbKeys = "id" | "createdAt" | "updatedAt";
+
+export type UndoPartial<T> = { [P in keyof T]-?: T[P] };
