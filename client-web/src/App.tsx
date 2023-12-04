@@ -1,10 +1,10 @@
-import { DraggableArea } from "./components";
+import { DraggableArea, SelectedInfo } from "./components";
 
 export function App() {
   return (
-    <main className="w-screen h-screen flex gap-4 justify-between items-center">
+    <main className="h-screen flex gap-6 justify-between items-center container mx-auto">
       <DraggableArea />
-      <aside className="bg-red-400 hidden">aside</aside>
+      <SelectedInfo />
     </main>
   );
 }
