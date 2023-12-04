@@ -1,6 +1,7 @@
 import React from "react";
 import { ISelectedFileContext } from "./@types";
 import services from "../../services";
+import { IResume } from "../../@types";
 
 export const SelectedFileContext = React.createContext({
   selected: null,
@@ -16,7 +17,7 @@ export function SelectedFileProvider(
     token: string;
     id: string;
   } | null>(null);
-  const [finalData, setFinalData] = React.useState<unknown | null>(null);
+  const [finalData, setFinalData] = React.useState<IResume | null>(null);
 
   const uploadSelected = async () => {
     try {
@@ -38,7 +39,7 @@ export function SelectedFileProvider(
 
       // @ts-ignore
       setUploaded(data);
-      setFinalData(data);
+      setFinalData(data as IResume);
     } catch (error) {
       setError((error as Error).message);
     } finally {
