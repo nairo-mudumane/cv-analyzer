@@ -9,7 +9,10 @@ export async function removeFile(filePath: string): Promise<void> {
   return await new Promise<void>((resolve, reject) => {
     try {
       filePath = path.resolve(filePath);
-      return resolve(fs.unlinkSync(filePath));
+
+      return fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (!err) return resolve(fs.unlinkSync(filePath));
+      });
     } catch (error) {
       reject(error);
     }

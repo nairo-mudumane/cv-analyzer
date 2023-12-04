@@ -33,7 +33,7 @@ function filename(
   const now = new Date().toISOString().toLowerCase();
   const name = encodeURIComponent(file.originalname);
 
-  callback(null, `${name}_-_${now}`);
+  callback(null, `${now}_-_${name}`);
 }
 
 const storage = multer.diskStorage({
