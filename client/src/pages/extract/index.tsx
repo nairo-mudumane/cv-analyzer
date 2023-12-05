@@ -20,9 +20,11 @@ export function Extract() {
 
     const isAlreadyExtracted = localStorage.getItem(`Ex_:${params.token!}`);
     if (!isAlreadyExtracted) {
-      localStorage.setItem(`Ex_:${params.token!}`, "true");
       triggerExtraction();
+      localStorage.setItem(`Ex_:${params.token!}`, "true");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -122,7 +124,9 @@ export function Extract() {
       )}
 
       <div className="my-4">
-        <Button variant="contained">Reset</Button>
+        <Button variant="contained" href="/">
+          Reset
+        </Button>
       </div>
     </div>
   );

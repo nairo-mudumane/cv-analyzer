@@ -22,6 +22,8 @@ export function Translate() {
       triggerTranslation();
       localStorage.setItem(`Tr_:${params.token!}`, "true");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
