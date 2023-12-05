@@ -120,6 +120,10 @@ export function Extract() {
           </li>
         </ul>
       )}
+
+      <div className="my-4">
+        <Button variant="contained">Reset</Button>
+      </div>
     </div>
   );
 }
