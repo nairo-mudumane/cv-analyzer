@@ -1,9 +1,11 @@
 import { IResume } from "../../@types";
 
 export interface ISelectedFileContext {
-  selected: File | null;
-  setSelected: React.Dispatch<File>;
+  selectedFile: File | null;
+  setSelectedFile: React.Dispatch<File>;
   loading: boolean | string;
   error: string;
-  finalData: IResume | null;
+  resume: IResume | null;
+  translateTo: string;
+  setTranslateTo: React.Dispatch<string>;
 }

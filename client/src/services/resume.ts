@@ -1,7 +1,8 @@
 import { AxiosError } from "axios";
 import { api } from "./axios";
+import { IResume } from "../@types";
 
-type uploadedData = { token: string; id: string };
+type uploadedData = Pick<IResume, "id" | "token">;
 
 export async function upload(file: File): Promise<uploadedData> {
   try {
