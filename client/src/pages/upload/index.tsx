@@ -1,5 +1,9 @@
-import React from "react";
+import { DraggableArea } from "../../components";
 
 export function Upload() {
-  return <div>Upload</div>;
+  return (
+    <main className="h-screen flex gap-6 justify-between items-center container mx-auto">
+      <DraggableArea />
+    </main>
+  );
 }
