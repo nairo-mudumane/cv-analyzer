@@ -32,8 +32,8 @@ export function Translate() {
         <Alert
           severity="error"
           action={
-            <Button variant="contained" onClick={() => location.reload()}>
-              Retry
+            <Button variant="contained" href="/">
+              Reset
             </Button>
           }
         >
