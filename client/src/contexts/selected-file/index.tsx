@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ISelectedFileContext } from "./@types";
 import services from "../../services";
-import { IResume } from "../../@types";
+import { IResume, QueryParams, UndoPartial } from "../../@types";
 
 export const SelectedFileContext = React.createContext({
   selectedFile: null,
@@ -41,28 +41,42 @@ export function SelectedFileProvider(
     if (selectedFile) onSelectedFileChange();
   }, [onSelectedFileChange, selectedFile]);
 
-  // const processUploaded = async () => {
-  //   try {
-  //     setLoading("processing... (this may take 1 minute or more)");
-  //     const { token, id } = uploaded!;
-  //     const data = await services.resume.process({ token, id });
+  async function translate(data: UndoPartial<QueryParams>) {
+    try {
+      setLoading("translating...");
 
-  //     setUploaded(data);
-  //     setFinalData(data as IResume);
-  //   } catch (error) {
-  //     setError((error as Error).message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const translated = await services.resume.translate(data).catch((err) => {
+        localStorage.removeItem(data.token);
+        throw err;
+      });
 
-  // React.useEffect(() => {
-  //   if (selected) uploadSelected();
-  // }, [selected]);
+      setResume(translated);
 
-  // React.useEffect(() => {
-  //   if (uploaded && !finalData) processUploaded();
-  // }, [uploaded, finalData]);
+      const redirectUrl = `/extract?target=${translateTo}&token=${translated.token}&resume=${translated.id}`;
+      navigate(redirectUrl);
+    } catch (error) {
+      setError((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function extract(data: UndoPartial<QueryParams>) {
+    try {
+      setLoading("processing information, this can take 1 minute or more.");
+
+      const processed = await services.resume.extract(data).catch((err) => {
+        localStorage.removeItem(data.token);
+        throw err;
+      });
+
+      setResume(processed);
+    } catch (error) {
+      setError((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SelectedFileContext.Provider
@@ -74,6 +88,8 @@ export function SelectedFileProvider(
         setSelectedFile,
         translateTo,
         setTranslateTo,
+        translate,
+        extract,
       }}
     >
       {props.children}
