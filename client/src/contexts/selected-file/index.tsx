@@ -38,8 +38,8 @@ export function SelectedFileProvider(
   }, [navigate, selectedFile, translateTo]);
 
   React.useEffect(() => {
-    if (selectedFile) onSelectedFileChange();
-  }, [onSelectedFileChange, selectedFile]);
+    if (selectedFile && !resume?.token) onSelectedFileChange();
+  }, [onSelectedFileChange, resume?.token, selectedFile]);
 
   async function translate(data: UndoPartial<QueryParams>) {
     try {
@@ -66,7 +66,7 @@ export function SelectedFileProvider(
       setLoading("processing information, this can take 1 minute or more.");
 
       const processed = await services.resume.extract(data).catch((err) => {
-        localStorage.removeItem(data.token);
+        localStorage.removeItem(`Tr_:${data.token}`);
         throw err;
       });
 

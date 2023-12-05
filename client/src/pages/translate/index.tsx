@@ -17,10 +17,10 @@ export function Translate() {
     const triggerTranslation = async () =>
       await translate(params as UndoPartial<QueryParams>);
 
-    const isAlreadyTranslated = localStorage.getItem(params.token!);
+    const isAlreadyTranslated = localStorage.getItem(`Tr_:${params.token!}`);
     if (!isAlreadyTranslated) {
       triggerTranslation();
-      localStorage.setItem(params.token!, "true");
+      localStorage.setItem(`Tr_:${params.token!}`, "true");
     }
   }, []);
 
