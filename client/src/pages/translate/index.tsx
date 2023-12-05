@@ -46,7 +46,7 @@ export function Translate() {
             className="text-primary underline underline-offset-4 cursor-pointer"
             onClick={() => window.location.reload()}
           >
-            Click here to manually redirect
+            <a href="/">Reset</a>
           </div>
         </>
       )}
