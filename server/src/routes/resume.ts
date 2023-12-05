@@ -5,6 +5,7 @@ import storage from "../services/storage";
 const router = Router();
 
 router.post("/new", storage.local.single("resume"), controller.create);
+router.post("/:id/translate", controller.translate);
 router.post("/:id/extract", controller.extract);
 
 export { router as ResumeRoutes };

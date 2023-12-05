@@ -1,8 +1,6 @@
 import { DbData, DbKeys } from "./global";
 import { IResume } from "./resume";
 
-export type MetadataLang = "PT" | "EN";
-
 export interface ProcessedMetadata {
   name: string; // his full name
   age: number; // his age or zero
@@ -16,9 +14,10 @@ export interface ProcessedMetadata {
 }
 
 export interface IResumeMetadata extends DbData, ProcessedMetadata {
-  lang: MetadataLang;
-  resumeId: string | null;
-  resume: Array<IResume[]>;
+  lang: string;
+  resumeId: string;
+  resume: IResume;
+  rawInfo: string | null;
 }
 
 export type INewResumeMetadata = Partial<

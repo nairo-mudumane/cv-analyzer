@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import PDFParser from "pdf-parse";
 import database from "../../services/database";
-import { INewResumeMetadata, IResume, UndoPartial } from "../../@types";
-import { downloadBuffer } from "../../services/download-buffer";
+import { IResume } from "../../@types";
 import Gpt from "../../services/gpt";
 
 export async function extract(request: Request, response: Response) {
@@ -14,7 +12,10 @@ export async function extract(request: Request, response: Response) {
   try {
     if (!token) throw new Error("access denied: no token provided");
 
-    resume = await database.resume.findFirst({ where: { id } });
+    resume = (await database.resume.findFirst({
+      where: { id },
+      include: { metadata: true },
+    })) as IResume;
     if (!resume) return response.status(404).json({ message: "not found" });
 
     if (resume.token !== token) throw new Error("access denied: invalid token");
@@ -23,28 +24,17 @@ export async function extract(request: Request, response: Response) {
   }
 
   try {
-    const PDFBuffer = await downloadBuffer(resume!.url);
-    if (!PDFBuffer) throw new Error("internal error: file unavailable");
+    const processedMetadata = await gpt.precessMetadata(
+      resume.metadata!.rawInfo!
+    );
 
-    const pdfData = await PDFParser(PDFBuffer);
-
-    const translated = await gpt.translate({
-      source: pdfData.text,
-      targetLang: "EN",
+    const updatedResume = await database.resume.update({
+      include: { metadata: true },
+      where: { id: resume.id as string },
+      data: { metadata: { update: processedMetadata } },
     });
 
-    const metadata = await gpt.precessMetadata(translated);
-
-    const createdMetadata = await database.resumeMetadata.create({
-      data: {
-        ...(metadata as UndoPartial<INewResumeMetadata>),
-        resumeId: resume.id as string,
-      },
-    });
-
-    return response
-      .status(200)
-      .json({ message: "ok", data: { ...resume, metadata: createdMetadata } });
+    return response.status(200).json({ message: "ok", data: updatedResume });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }
