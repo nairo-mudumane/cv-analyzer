@@ -16,7 +16,6 @@ export function Extract() {
   React.useEffect(() => {
     const triggerExtraction = async () =>
       await extract(params as UndoPartial<QueryParams>);
-    triggerExtraction();
 
     const isAlreadyExtracted = localStorage.getItem(`Ex_:${params.token!}`);
     if (!isAlreadyExtracted) {
