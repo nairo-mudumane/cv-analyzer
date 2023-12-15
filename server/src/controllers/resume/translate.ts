@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import PDFParser from "pdf-parse";
 import Gpt from "../../services/gpt";
 import { IResume } from "../../@types";
 import database from "../../services/database";
-import { downloadBuffer } from "../../services/download-buffer";
+import helpers from "../../helpers";
 
 type Params = { id: string };
 type QueryParams = Partial<{ token: string; target: string }>;
@@ -16,7 +15,7 @@ export async function translate(request: Request, response: Response) {
 
   try {
     if (!queryParams.token) throw new Error("access denied: no token provided");
-    if (!queryParams.target) queryParams.target = "EN";
+    if (!queryParams.target) queryParams["target"] = "EN";
 
     resume = (await database.resume.findFirst({
       where: { id },
@@ -30,13 +29,11 @@ export async function translate(request: Request, response: Response) {
   }
 
   try {
-    const PDFBuffer = await downloadBuffer(resume!.url);
+    const PDFBuffer = await helpers.downloader.toBuffer(resume!.url);
     if (!PDFBuffer) throw new Error("internal error: file unavailable");
 
-    const pdfData = await PDFParser(PDFBuffer);
-
     const translated = await gpt.translate({
-      source: pdfData.text,
+      source: resume.metadata!.rawInfo!,
       targetLang: queryParams.target!,
     });
 

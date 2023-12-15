@@ -1,7 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 
-export async function downloadBuffer(
+async function toBuffer(
   url: string,
   localUrl = false
 ): Promise<Buffer | undefined> {
@@ -10,3 +10,5 @@ export async function downloadBuffer(
   const response = await axios.get(url, { responseType: "arraybuffer" });
   return Buffer.from(response.data);
 }
+
+export default { toBuffer };

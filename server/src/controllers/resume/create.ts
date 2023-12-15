@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import PDFParser from "pdf-parse";
-import crypto from "crypto";
+
 import helpers from "../../helpers";
 import storage from "../../services/storage";
 import database from "../../services/database";
-import { downloadBuffer } from "../../services/download-buffer";
 
 export async function create(request: Request, response: Response) {
   const { file } = request;
@@ -13,7 +12,7 @@ export async function create(request: Request, response: Response) {
   try {
     if (!file) throw new Error("resume file is required");
 
-    const PDFBuffer = await downloadBuffer(file.path, true);
+    const PDFBuffer = await helpers.downloader.toBuffer(file.path, true);
     if (!PDFBuffer) throw new Error("internal error: file unavailable");
 
     const pdfData = await PDFParser(PDFBuffer);
@@ -24,7 +23,7 @@ export async function create(request: Request, response: Response) {
       filepath: file.path,
     })) as string;
 
-    const token = crypto.randomBytes(32).toString("hex");
+    const token = helpers.encrypt.randomBytes();
 
     const created = await database.resume.create({
       data: {

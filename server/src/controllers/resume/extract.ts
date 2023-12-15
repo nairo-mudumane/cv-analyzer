@@ -16,8 +16,8 @@ export async function extract(request: Request, response: Response) {
       where: { id },
       include: { metadata: true },
     })) as IResume;
-    if (!resume) return response.status(404).json({ message: "not found" });
 
+    if (!resume) return response.status(404).json({ message: "not found" });
     if (resume.token !== token) throw new Error("access denied: invalid token");
   } catch (error) {
     return response.status(400).json({ message: (error as Error).message });
