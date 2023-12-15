@@ -8,6 +8,10 @@ export function Extract() {
   const { extract, error, resume } = useSelectedFile();
   const [searchParams] = useSearchParams();
 
+  const [isAlreadyExtracted, setIsAlreadyExtracted] = React.useState<
+    string | null
+  >(null);
+
   const params: QueryParams = {};
   params["resume"] = searchParams.get("resume") ?? "";
   params["target"] = searchParams.get("target") ?? "";
@@ -17,14 +21,49 @@ export function Extract() {
     const triggerExtraction = async () =>
       await extract(params as UndoPartial<QueryParams>);
 
-    const isAlreadyExtracted = localStorage.getItem(`Ex_:${params.token!}`);
-    if (!isAlreadyExtracted) {
+    // const isAlreadyExtracted =
+    const localData = localStorage.getItem(`Ex_:${params.token!}`);
+    if (localData) setIsAlreadyExtracted("true");
+    else {
       triggerExtraction();
       localStorage.setItem(`Ex_:${params.token!}`, "true");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function extractAgain() {
+    localStorage.removeItem(`Ex_:${params.token!}`);
+    extract(params as UndoPartial<QueryParams>);
+  }
+
+  if (isAlreadyExtracted)
+    return (
+      <div className="container mx-auto py-6 px-4">
+        <ul>
+          <div className="text-2xl font-bold mb-2">
+            This document has already been processed in this browser
+          </div>
+
+          <div className="mt-6 flex gap-4">
+            <li>
+              <Button variant="outlined" onClick={extractAgain}>
+                Process again
+              </Button>
+            </li>
+
+            <li>
+              <Button
+                variant="contained"
+                onClick={() => window.location.replace("/")}
+              >
+                Reset
+              </Button>
+            </li>
+          </div>
+        </ul>
+      </div>
+    );
 
   return (
     <div className="container mx-auto py-6 px-4">
