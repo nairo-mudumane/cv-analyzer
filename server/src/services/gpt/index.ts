@@ -17,11 +17,7 @@ export default class Gpt {
       .replace("{{source}}", options.source)
       .replace("{{target}}", options.targetLang);
 
-    console.log({ prompt });
-
     const result = await this.openAiLlm.predict(prompt);
-
-    console.log({ result });
 
     return result;
   }

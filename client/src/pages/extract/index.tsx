@@ -8,9 +8,8 @@ export function Extract() {
   const { extract, error, resume } = useSelectedFile();
   const [searchParams] = useSearchParams();
 
-  const [isAlreadyExtracted, setIsAlreadyExtracted] = React.useState<
-    string | null
-  >(null);
+  const [isAlreadyExtracted, setIsAlreadyExtracted] =
+    React.useState<boolean>(false);
 
   const params: QueryParams = {};
   params["resume"] = searchParams.get("resume") ?? "";
@@ -21,10 +20,10 @@ export function Extract() {
     const triggerExtraction = async () =>
       await extract(params as UndoPartial<QueryParams>);
 
-    // const isAlreadyExtracted =
     const localData = localStorage.getItem(`Ex_:${params.token!}`);
-    if (localData) setIsAlreadyExtracted("true");
+    if (localData) setIsAlreadyExtracted(true);
     else {
+      setIsAlreadyExtracted(false);
       triggerExtraction();
       localStorage.setItem(`Ex_:${params.token!}`, "true");
     }
@@ -32,12 +31,14 @@ export function Extract() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function extractAgain() {
+  async function extractAgain() {
     localStorage.removeItem(`Ex_:${params.token!}`);
-    extract(params as UndoPartial<QueryParams>);
+    setIsAlreadyExtracted(false);
+    await extract(params as UndoPartial<QueryParams>);
+    localStorage.setItem(`Ex_:${params.token!}`, "true");
   }
 
-  if (isAlreadyExtracted)
+  if (!resume?.id && isAlreadyExtracted)
     return (
       <div className="container mx-auto py-6 px-4">
         <ul>
@@ -162,7 +163,10 @@ export function Extract() {
       )}
 
       <div className="my-4">
-        <Button variant="contained" href="/">
+        <Button
+          variant="contained"
+          onClick={() => window.location.replace("/")}
+        >
           Reset
         </Button>
       </div>
