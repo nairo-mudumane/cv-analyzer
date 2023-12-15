@@ -9,7 +9,7 @@ export type DbKeys = "id" | "createdAt" | "updatedAt";
 export type UndoPartial<T> = { [P in keyof T]-?: T[P] };
 
 export type QueryParams = Partial<{
-  target: string;
+  target: string | null;
   token: string;
   resume: string;
 }>;

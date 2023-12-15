@@ -15,7 +15,7 @@ export function SelectedFileProvider(
   const [error, setError] = React.useState<string>("");
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [resume, setResume] = React.useState<IResume | null>(null);
-  const [translateTo, setTranslateTo] = React.useState<string>("en");
+  const [translateTo, setTranslateTo] = React.useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -27,7 +27,12 @@ export function SelectedFileProvider(
         const { id, token } = await services.resume.upload(selectedFile);
 
         setResume({ id, token } as IResume);
-        const redirectUrl = `/translate?target=${translateTo}&token=${token}&resume=${id}`;
+
+        let redirectUrl = "";
+        if (translateTo)
+          redirectUrl = `/translate?target=${translateTo}&token=${token}&resume=${id}`;
+        else redirectUrl = `/extract?token=${token}&resume=${id}`;
+
         navigate(redirectUrl);
       }
     } catch (error) {
@@ -43,7 +48,7 @@ export function SelectedFileProvider(
 
   async function translate(data: UndoPartial<QueryParams>) {
     try {
-      setLoading("translating...");
+      setLoading("translating... This can take 1 minute or more.");
 
       const translated = await services.resume.translate(data).catch((err) => {
         localStorage.removeItem(data.token);

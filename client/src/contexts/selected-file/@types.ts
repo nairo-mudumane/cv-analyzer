@@ -6,8 +6,8 @@ export interface ISelectedFileContext {
   loading: boolean | string;
   error: string;
   resume: IResume | null;
-  translateTo: string;
-  setTranslateTo: React.Dispatch<string>;
+  translateTo: string | null;
+  setTranslateTo: React.Dispatch<string | null>;
   translate: (data: UndoPartial<QueryParams>) => Promise<void>;
   extract: (data: UndoPartial<QueryParams>) => Promise<void>;
 }
