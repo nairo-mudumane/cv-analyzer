@@ -3,6 +3,8 @@ import { OnConnectCallback } from "./@types";
 
 const prisma = new PrismaClient({ log: ["warn", "error"] });
 
+prisma.vacancy;
+
 const $connect = async (callback?: OnConnectCallback) => {
   try {
     console.log("connecting to database...");
@@ -21,4 +23,5 @@ export default {
   $connect,
   resume: prisma.resume,
   resumeMetadata: prisma.resumeMetadata,
+  vacancy: prisma.vacancy,
 };

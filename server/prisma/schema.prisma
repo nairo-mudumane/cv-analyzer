@@ -43,3 +43,15 @@ model ResumeMetadata {
 
   @@map("resume_metadata")
 }
+
+model Vacancy {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  headline    String
+  description String
+  expiresAt   DateTime
+
+  @@map("vacancies")
+}

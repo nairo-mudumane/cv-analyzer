@@ -12,7 +12,7 @@ export interface ProcessedMetadata {
   other: string | null;
 }
 
-export interface IResumeMetadata extends DbData, ProcessedMetadata {
+export interface IResumeMetadata extends DbData<string>, ProcessedMetadata {
   lang: string;
   rawInfo: string | null;
 }

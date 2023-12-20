@@ -1,7 +1,7 @@
 import { DbData, DbKeys } from "./global";
 import { IResumeMetadata } from "./resume-metadata";
 
-export interface IResume extends DbData {
+export interface IResume extends DbData<string> {
   url: string;
   token: string;
   metadataId: string;
