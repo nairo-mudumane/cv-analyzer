@@ -23,14 +23,17 @@ export async function getBestFit(request: Request, response: Response) {
     });
 
     const sortedResumes = (await gpt.getBestCandidate({
-      candidateLength: 3,
+      candidateLength: 2,
       resumes: JSON.stringify(rawResumes),
       vacancyDescription: vacancy.description,
     })) as typeof rawResumes;
 
-    // const formatedResumes = await database.resumeMetadata.findMany({where:{id:}})
+    const formatedResumes = await database.resume.findMany({
+      include: { metadata: true },
+      where: { metadata: { OR: sortedResumes.map(({ id }) => ({ id })) } },
+    });
 
-    return response.json({ rawResumes, sortedResumes });
+    return response.json({ rawResumes, sortedResumes, formatedResumes });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }

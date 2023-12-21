@@ -44,20 +44,24 @@ export default class Gpt {
       const prompt = prompts.extract.bestCandidate
         .replace("{{resumes}}", JSON.stringify(data.resumes))
         .replace("{{description}}", data.vacancyDescription)
-        .replace("{{limit}}", String(data.candidateLength || 4));
+        .replace("{{limit}}", String(data.candidateLength ?? 2));
 
-      let result: string = await this.openAiLlm.predict(prompt);
+      const result: string = await this.openAiLlm.predict(prompt);
 
-      let count = 0;
-      while (!helpers.json.isValid(result)) {
-        if (count >= 2)
-          throw new Error(
-            "internal error: gpt exceed. please try again in 1 hour"
-          );
+      if (!helpers.json.isValid(result))
+        throw new Error(
+          "internal error: gpt exceed. please try again in 1 hour"
+        );
 
-        result = await this.openAiLlm.predict(prompt);
-        count += 1;
-      }
+      // let count = 0;
+      // while (!helpers.json.isValid(result)) {
+      //   if (count >= 2)
+      // throw new Error(
+      //   "internal error: gpt exceed. please try again in 1 hour"
+      // );
+      //   result = await this.openAiLlm.predict(prompt);
+      //   count += 1;
+      // }
 
       const parsed = helpers.json.parse<IResumeMetadata>(result);
       return parsed;
