@@ -1,7 +1,7 @@
-import { INewResumeMetadata } from "../../@types";
+import { INewResumeMetadata, IResumeMetadata } from "../../@types";
 import helpers from "../../helpers";
 import prompts from "../../prompts";
-import { ITranslateOptions } from "./@types";
+import { IGetBestCandidateConfig, ITranslateOptions } from "./@types";
 import { config } from "./config";
 import { OpenAI } from "langchain/llms/openai";
 
@@ -31,6 +31,35 @@ export default class Gpt {
         result = await this.openAiLlm.predict(prompt);
 
       const parsed = helpers.json.parse<INewResumeMetadata>(result);
+      return parsed;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }
+
+  public async getBestCandidate(
+    data: IGetBestCandidateConfig
+  ): Promise<Partial<IResumeMetadata>> {
+    try {
+      const prompt = prompts.extract.bestCandidate
+        .replace("{{resumes}}", JSON.stringify(data.resumes))
+        .replace("{{description}}", data.vacancyDescription)
+        .replace("{{limit}}", String(data.candidateLength || 4));
+
+      let result: string = await this.openAiLlm.predict(prompt);
+
+      let count = 0;
+      while (!helpers.json.isValid(result)) {
+        if (count >= 2)
+          throw new Error(
+            "internal error: gpt exceed. please try again in 1 hour"
+          );
+
+        result = await this.openAiLlm.predict(prompt);
+        count += 1;
+      }
+
+      const parsed = helpers.json.parse<IResumeMetadata>(result);
       return parsed;
     } catch (error) {
       throw new Error((error as Error).message);
