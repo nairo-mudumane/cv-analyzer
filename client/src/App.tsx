@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Extract, Home, NotFound, Translate, Upload } from "./pages";
+import { Extract, Home, Jobs, NotFound, Translate, Upload } from "./pages";
 import { useSelectedFile } from "./hooks";
 import { LoadingScreen } from "./components";
 
@@ -14,6 +14,8 @@ export function App() {
       <Route path="/upload" element={<Upload />} />
       <Route path="/translate" element={<Translate />} />
       <Route path="/extract" element={<Extract />} />
+      <Route path="/jobs" element={<Jobs />} />
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

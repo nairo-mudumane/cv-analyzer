@@ -1,3 +1,4 @@
 import * as resume from "./resume";
+import * as jobs from "./jobs";
 
-export default { resume };
+export default { resume, jobs };

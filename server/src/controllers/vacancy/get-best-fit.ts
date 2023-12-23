@@ -33,7 +33,7 @@ export async function getBestFit(request: Request, response: Response) {
       where: { metadata: { OR: sortedResumes.map(({ id }) => ({ id })) } },
     });
 
-    return response.json({ rawResumes, sortedResumes, formatedResumes });
+    return response.status(200).json({ message: "ok", data: formatedResumes });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }

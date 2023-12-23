@@ -13,3 +13,9 @@ export type QueryParams = Partial<{
   token: string;
   resume: string;
 }>;
+
+export type APIResponse<T = unknown> = {
+  message: string;
+  count?: number;
+  data?: T;
+};

@@ -9,7 +9,7 @@ export async function getById(request: Request, response: Response) {
 
     if (!vacancy) return response.status(400).json({ message: "not found" });
 
-    return response.status(200).json({ message: "created", data: vacancy });
+    return response.status(200).json({ message: "ok", data: vacancy });
   } catch (error) {
     return response.status(500).json({ message: (error as Error).message });
   }
