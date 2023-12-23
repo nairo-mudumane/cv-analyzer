@@ -20,13 +20,32 @@ export function Jobs() {
     mutate,
   } = useSWR("/jobs", services.jobs.getAll);
 
+  const onActionClick = () => mutate();
+
   if (isLoading) return <LoadingScreen fixed />;
 
-  if (error || !jobs)
+  if (error)
     return (
       <Container className="bg-zinc-100 w-screen h-screen py-6">
         <Alert severity="error">
-          <div>{error ? (error as Error).message : "Nothing found"}</div>
+          <div>{(error as Error).message}</div>
+
+          <Button
+            variant="outlined"
+            onClick={() => mutate()}
+            sx={{ mt: 2, ml: "auto" }}
+          >
+            Try again
+          </Button>
+        </Alert>
+      </Container>
+    );
+
+  if (!jobs)
+    return (
+      <Container className="bg-zinc-100 w-screen h-screen py-6">
+        <Alert severity="error">
+          <div>Nothing found</div>
 
           <Button
             variant="outlined"
@@ -40,16 +59,25 @@ export function Jobs() {
     );
 
   return (
-    <div className="bg-zinc-100 flex flex-col w-screen h-screen">
-      <SectionTitle
-        jobs={jobs}
-        onAction={mutate}
-        loading={isValidating || isLoading}
-      />
+    <div className="bg-zinc-100 w-screen h-screen overflow-hidden">
+      <section className="bg-white h-10vh py-4">
+        <SectionTitle
+          jobs={jobs}
+          onAction={onActionClick}
+          loading={isValidating || isLoading}
+        />
+      </section>
 
-      <main className="flex-1 flex justify-between">
-        <SectionJobs jobs={jobs} />
-        {queryJobId && <SectionJobById jobId={queryJobId} />}
+      <main className="flex justify-between">
+        <section className="border-zinc-400 border-r flex-1 min-w-[30%]">
+          <SectionJobs jobs={jobs} />
+        </section>
+
+        {queryJobId && (
+          <section className="">
+            <SectionJobById jobId={queryJobId} />
+          </section>
+        )}
       </main>
     </div>
   );

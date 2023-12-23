@@ -1,4 +1,4 @@
-import { APIResponse, IJob } from "../@types";
+import { APIResponse, IJob, IResume } from "../@types";
 import helpers from "../helpers";
 import { api } from "./axios";
 
@@ -23,6 +23,20 @@ export async function getById(id: string): Promise<IJob | undefined> {
       .then(({ data }) => data.data);
 
     return job;
+  } catch (error) {
+    helpers.axios.throwAxiosError(error);
+  }
+}
+
+export async function getBestFit(
+  jobId: string
+): Promise<Array<IResume> | undefined> {
+  try {
+    const bestCandidates = await api
+      .get<APIResponse<Array<IResume>>>(`${baseUrl}/${jobId}/best_fit`)
+      .then(({ data }) => data.data);
+
+    return bestCandidates;
   } catch (error) {
     helpers.axios.throwAxiosError(error);
   }

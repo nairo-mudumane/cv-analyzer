@@ -8,7 +8,7 @@ export default function SectionTitle({
   onAction,
 }: IJobsInnerProps) {
   return (
-    <section className="bg-white py-6">
+    <>
       <Container className="flex gap-4 justify-between">
         <div className="flex-1">
           <h2 className="text-primary font-bold text-xl md:text-3xl">
@@ -38,6 +38,6 @@ export default function SectionTitle({
           </Button>
         </div>
       </Container>
-    </section>
+    </>
   );
 }
