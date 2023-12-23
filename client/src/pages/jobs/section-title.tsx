@@ -23,7 +23,7 @@ export default function SectionTitle({
           <Button
             size="small"
             variant="contained"
-            disabled={loading}
+            disabled={true}
             className="gap-2"
             onClick={onAction}
           >

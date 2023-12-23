@@ -15,12 +15,12 @@ export default function SectionJobs({ jobs }: IJobsInnerProps) {
 
   return (
     <StyledSectionJobs className="h-[90vh] overflow-y-auto">
-      {jobs.concat(jobs.concat(jobs)).map((job, index) => {
+      {jobs.map((job) => {
         const expired = new Date() > new Date(String(job.expiresAt));
 
         return (
           <li
-            key={index + job.id}
+            key={job.id}
             onClick={() => onJobClick(job.id)}
             className={clsx(
               selectedJob === job.id && "bg-[#d7e9fb] ",

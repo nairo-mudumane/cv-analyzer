@@ -126,7 +126,12 @@ export default function SectionJobById({ jobId }: ISectionJobByIdProps) {
                 </div>
 
                 <div className="w-max max-w-full ml-auto flex gap-2 items-center">
-                  <Button variant="contained" size="small">
+                  <Button
+                    variant="contained"
+                    size="small"
+                    target="_blank"
+                    href={resume.url}
+                  >
                     Open resume
                   </Button>
                 </div>
