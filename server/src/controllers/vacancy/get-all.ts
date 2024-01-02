@@ -3,7 +3,9 @@ import database from "../../services/database";
 
 export async function getAll(request: Request, response: Response) {
   try {
-    const vacancies = await database.vacancy.findMany();
+    const vacancies = await database.vacancy.findMany({
+      orderBy: { expiresAt: "desc" },
+    });
 
     return response.status(200).json({ message: "ok", data: vacancies });
   } catch (error) {
