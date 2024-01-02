@@ -1,4 +1,4 @@
-import { IJob } from "../../@types";
+import { IJob, IResume } from "../../@types";
 
 export interface IJobsInnerProps {
   jobs: Array<IJob>;
@@ -6,4 +6,8 @@ export interface IJobsInnerProps {
   onAction?: () => unknown;
 }
 
-export type ISectionJobByIdProps = { jobId: string };
+export type ISectionItemById = { itemId: string };
+
+export interface ISectionResumesProps {
+  resumes: Array<IResume>;
+}

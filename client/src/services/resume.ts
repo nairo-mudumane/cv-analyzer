@@ -54,3 +54,27 @@ export async function extract(
     helpers.axios.throwAxiosError(error);
   }
 }
+
+export async function getAll(): Promise<Array<IResume> | undefined> {
+  try {
+    const resumes = await api
+      .get<APIResponse<Array<IResume>>>("/resumes")
+      .then(({ data }) => data.data!);
+
+    return resumes;
+  } catch (error) {
+    helpers.axios.throwAxiosError(error);
+  }
+}
+
+export async function getById(id: string): Promise<IResume | undefined> {
+  try {
+    const resume = await api
+      .get<APIResponse<IResume>>(`/resumes/${id}`)
+      .then(({ data }) => data.data);
+
+    return resume;
+  } catch (error) {
+    helpers.axios.throwAxiosError(error);
+  }
+}

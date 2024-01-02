@@ -1,25 +1,25 @@
 import React from "react";
 import clsx from "clsx";
-import { Alert, Button } from "@mui/material";
 import useSWR from "swr";
 import moment from "moment";
+import { Alert, Button } from "@mui/material";
 import services from "../../services";
 import { Container } from "../../components";
-import { ISectionJobByIdProps } from "./@types";
+import { ISectionItemById } from "./@types";
 
-export default function SectionJobById({ jobId }: ISectionJobByIdProps) {
+export default function SectionJobById({ itemId }: ISectionItemById) {
   const {
     data: job,
     error: errorJob,
     isLoading: isLoadingJob,
     mutate: mutateJob,
-  } = useSWR(["/jobs", jobId], () => services.jobs.getById(jobId));
+  } = useSWR([`/jobs/${itemId}`], () => services.jobs.getById(itemId));
 
   const {
     data: resumes,
     error: errorResumes,
     isLoading: isLoadingResumes,
-  } = useSWR(["/best_fit", jobId], () => services.jobs.getBestFit(jobId));
+  } = useSWR(["/best_fit", itemId], () => services.jobs.getBestFit(itemId));
 
   const [expired, setExpired] = React.useState<boolean>(false);
 
@@ -55,7 +55,7 @@ export default function SectionJobById({ jobId }: ISectionJobByIdProps) {
     );
 
   return (
-    <Container className="w-full h-[90vh] overflow-y-auto">
+    <Container className="w-full h-[90vh] overflow-y-auto pb-14">
       <h3 className="text-primary underline-offset-2 font-bold text-xl md:text-3xl">
         {job.headline}
       </h3>
@@ -107,7 +107,7 @@ export default function SectionJobById({ jobId }: ISectionJobByIdProps) {
             resumes.map((resume) => (
               <div
                 key={resume.id}
-                className="border-primary bg-white text-sm border rounded-lg py-2 px-4 flex flex-col justify-between"
+                className="border-transparent hover:border-primary bg-white text-sm border rounded-lg py-2 px-4 flex flex-col justify-between"
               >
                 <div>
                   <div className="text-primary text-base font-bold">
