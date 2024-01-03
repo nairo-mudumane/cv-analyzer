@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Container } from "../../components";
 import { IJobsInnerProps } from "./@types";
 import { Button, CircularProgress } from "@mui/material";
@@ -19,11 +20,10 @@ export default function SectionTitle({
           </h2>
         </div>
 
-        <div>
+        <Link to="/jobs/new">
           <Button
             size="small"
             variant="contained"
-            disabled={true}
             className="gap-2"
             onClick={onAction}
           >
@@ -36,7 +36,7 @@ export default function SectionTitle({
               </>
             )}
           </Button>
-        </div>
+        </Link>
       </Container>
     </>
   );

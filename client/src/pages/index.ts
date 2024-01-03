@@ -4,3 +4,4 @@ export * from "./translate";
 export * from "./extract";
 export * from "./home";
 export * from "./jobs";
+export * from "./add-vacancy";

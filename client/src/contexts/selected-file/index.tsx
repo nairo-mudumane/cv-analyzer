@@ -24,7 +24,10 @@ export function SelectedFileProvider(
       if (selectedFile) {
         setLoading("uploading your file, please don't reload this page.");
 
-        const { id, token } = await services.resume.upload(selectedFile);
+        const uploadedData = await services.resume.upload(selectedFile);
+        if (!uploadedData) throw new Error("server returned null");
+
+        const { id, token } = uploadedData;
 
         setResume({ id, token } as IResume);
 
@@ -55,6 +58,8 @@ export function SelectedFileProvider(
         throw err;
       });
 
+      if (!translated) throw new Error("server returned null");
+
       setResume(translated);
 
       const redirectUrl = `/extract?target=${translateTo}&token=${translated.token}&resume=${translated.id}`;
@@ -74,6 +79,8 @@ export function SelectedFileProvider(
         localStorage.removeItem(`Tr_:${data.token}`);
         throw err;
       });
+
+      if (!processed) throw new Error("server returned null");
 
       setResume(processed);
     } catch (error) {
